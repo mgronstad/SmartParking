@@ -1,11 +1,11 @@
-import { success, failure } from "./libs/response-lib";
-import * as dynamoDbLib from "./libs/dynamodb-lib";
-import AWS from "aws-sdk";
-import uuid from "uuid";
+const dynamoDbLib = require("./dynamodb-lib");
+const responseLib = require("./response-lib");
+const AWS = require("aws-sdk");
+const uuid = require("uuid");
 
 const dynamoDb = new AWS.DynamoDB.DocumentClient();
 
-export async function dynamo_insert(data, context, callback) {
+async function dynamo_insert(data, context, callback) {
   // Request body is passed in as a JSON encoded string in 'event.body'
 
   const params = {
@@ -20,9 +20,11 @@ export async function dynamo_insert(data, context, callback) {
 
   try {
     await dynamoDbLib.call("put", params);
-    return success(params.Item);
+    return responseLib.success(params.Item);
   } catch (e) {
     console.log(e);
-    return failure({ status: false });
+    return responseLib.failure({ status: false });
   }
 }
+
+module.exports.dynamo_insert = dynamo_insert;

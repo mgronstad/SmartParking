@@ -1,8 +1,8 @@
-export function success(body) {
+function success(body) {
   return buildResponse(200, body);
 }
 
-export function failure(body) {
+function failure(body) {
   return buildResponse(500, body);
 }
 
@@ -16,3 +16,6 @@ function buildResponse(statusCode, body) {
     body: JSON.stringify(body)
   };
 }
+
+module.exports.success = success;
+module.exports.failure = failure;
