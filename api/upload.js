@@ -1,6 +1,7 @@
 import { success, failure } from "./libs/response-lib";
 import * as dynamoDbLib from "./libs/dynamodb-lib";
 import AWS from "aws-sdk";
+import uuid from "uuid";
 
 const dynamoDb = new AWS.DynamoDB.DocumentClient();
 
@@ -11,13 +12,10 @@ export async function main(event, context, callback) {
   const params = {
     TableName: "people",
     Item: {
-      userId: event.requestContext.identity.cognitoIdentityId,
-      personID: data.ID,
-      personName: data.name,
-      attachment: data.attachment,
-      phone: data.phone,
-      notes: data.notes,
-      createdAt: Date.now()
+      Event_Id: uuid.v1(),
+      SIM_ID: data.ID,
+      Occupied: data.name,
+      Time: Date.now()
     }
   };
 
