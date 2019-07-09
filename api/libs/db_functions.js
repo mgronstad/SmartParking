@@ -5,9 +5,8 @@ import uuid from "uuid";
 
 const dynamoDb = new AWS.DynamoDB.DocumentClient();
 
-export async function main(event, context, callback) {
+export async function dynamo_insert(data, context, callback) {
   // Request body is passed in as a JSON encoded string in 'event.body'
-  const data = JSON.parse(event.body);
 
   const params = {
     TableName: "people",
