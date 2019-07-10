@@ -8,6 +8,12 @@ AWS.config.update(config.aws_remote_config);
 
 const dynamoDb = new AWS.DynamoDB.DocumentClient();
 
+// From https://www.geeksforgeeks.org/javascript-date-now/
+// Use of Date.now() function
+var fakeDate = Date(Date.now());
+// Converting the number of milliseconds in date string
+var currentDate = fakeDate.toString();
+
 async function dynamo_insert(data, context, callback) {
   // Request body is passed in as a JSON encoded string in 'event.body'
 
@@ -18,7 +24,7 @@ async function dynamo_insert(data, context, callback) {
       SIM_ID: data.ID,
       Occupied: false,
       User: data.name,
-      Time: Date.now()
+      Time: currentDate
     }
   };
 
