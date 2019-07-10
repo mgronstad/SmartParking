@@ -22,7 +22,7 @@ async function dynamo_insert(data, context, callback) {
     Item: {
       Event_ID: uuid.v1(),
       SIM_ID: data.ID,
-      Occupied: false,
+      Occupied: data.occupied,
       User: data.name,
       Time: currentDate
     }
