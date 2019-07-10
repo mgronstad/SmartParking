@@ -12,9 +12,15 @@ app.use(
 );
 
 app.post("/fromSIM", function(req, res) {
-  console.log(req.body);
   let command = req.body.Command;
-  db_functions.dynamo_insert(command);
+  let simID = req.body.SimSid;
+  let occupied = command == "occupied"
+  let data = {
+    "ID":simID,
+    "occupied": occupied
+  }
+  console.log(data);
+  db_functions.dynamo_insert(data);
 });
 /*
 app.get("/getEvents/:SIM", function(req, res) {

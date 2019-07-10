@@ -8,14 +8,14 @@ AWS.config.update(config.aws_remote_config);
 
 const dynamoDb = new AWS.DynamoDB.DocumentClient();
 
-// From https://www.geeksforgeeks.org/javascript-date-now/
-// Use of Date.now() function
-var fakeDate = Date(Date.now());
-// Converting the number of milliseconds in date string
-var currentDate = fakeDate.toString();
-
 async function dynamo_insert(data, context, callback) {
   // Request body is passed in as a JSON encoded string in 'event.body'
+
+  // From https://www.geeksforgeeks.org/javascript-date-now/
+  // Use of Date.now() function
+  var fakeDate = Date(Date.now());
+  // Converting the number of milliseconds in date string
+  var currentDate = fakeDate.toString();
 
   const params = {
     TableName: "Parking_Events",
@@ -23,7 +23,6 @@ async function dynamo_insert(data, context, callback) {
       Event_ID: uuid.v1(),
       SIM_ID: data.ID,
       Occupied: data.occupied,
-      User: data.name,
       Time: currentDate
     }
   };
