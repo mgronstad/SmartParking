@@ -107,7 +107,7 @@ Click *Tools > Post > {Your Modem Port Here}* this selects the correct port. The
 ## 5. Create the sketch to be uploaded to the Dev kit
 The Breakout Arduino Library offers several example sketches for getting started with the various sensors. For this project, we will be adapting the Ultrasonic sensor code. Start by opening the Ultrasonic example.
 
-Click *File > Examples > Breakout Arduino Library > Sensors > Ultrasonic* to open the Ultraasonic sketch:
+Click *File > Examples > Breakout Arduino Library > Sensors > Ultrasonic* to open the Ultrasonic sketch:
 
 ```javascript
 #include <board.h>
@@ -188,12 +188,12 @@ void loop()
   delay(INTERVAL);
 }
 ```
-For the code to be valid, you need to include the Ultrasonic library. Follow the [link](https://github.com/Seeed-Studio/Grove_Ultrasonic_Ranger) at the top of the code and download it as a zip file and then add it to your Arduino IDE.
+For the code to be valid, you need to include the Ultrasonic library. Follow the commented link [// Install https://github.com/Seeed-Studio/Grove_Ultrasonic_Ranger](https://github.com/Seeed-Studio/Grove_Ultrasonic_Ranger) at the top of the code and download it as a zip file and then add it to your Arduino IDE.
 
 ### Modifications to the Ultrasonic Sketch
 
 #### Within the preprocessor directives
-Substitute the first line `#include <board.h>` with the corresponding board library by going to *Sketch > Include Library > Wio LTE Arduino Library*, that line should be substituted with:
+Substitute the first line `#include <board.h>` with the corresponding board library by going to *Sketch > Include Library > Wio LTE Arduino Library*, that first line should be replaced with:
 ```javascript
 #include <board_config.h>
 #include <ethernet.h>
@@ -208,9 +208,11 @@ Modify the device purpose so that it is specific to this project, i.e. *Smart Pa
 static const char *device_purpose = "Smart Parking Ultrasonic Detection";
 ```
 
-Then change the value of psk_key so that it matches the key specific to **your SIM**. Log into your *Twilio account > Programmable Wireless > SIMs > your SIM's unique name > Breakout SDK > Pre-Shared Key*:
+Then change the value of psk_key so that it matches the **pre-shared key specific to your SIM**. To find your psk_key, log into your Twilio account:
+
+*Programmable Wireless > SIMs > your SIM's unique name > Breakout SDK > Pre-Shared Key*:
 ```javascript
-static const char *psk_key = "your Pre-Shared Key here";
+static const char *psk_key = "Your Pre-Shared Key Here";
 ```
 
 Above the `#define` lines add:
@@ -230,19 +232,18 @@ void enableLed()
     strip.brightness = 5;
 }
 ```
-#### Within the `void setup()`
-After the line `LOG(L_WARN, "Arduino setup() starting up\r\n");`, add the following which will change the RGB-LED to yellow:
+#### Within the void setup()
+After the line `LOG(L_WARN, "Arduino setup() starting up\r\n");` add the following which will change the RGB-LED to yellow:
 ```javascript
 enableLed();
 strip.WS2812SetRGB(0, 0x20, 0x20, 0x00);
 strip.WS2812Send();
 ```
 
-After the line `breakout->powerModuleOn();`, insert the following block of code:
+After the line `breakout->powerModuleOn();` insert the following block of code:
 ```javascript
 const char command[] = "LED Parking Sensor Activator";
-if(breakout->sendTextCommand(command) == COMMAND_STATUS_OK)
-{
+if(breakout->sendTextCommand(command) == COMMAND_STATUS_OK) {
   LOG(L_INFO, "Tx-Command [%s]\r\n", command);
 }
 else
@@ -251,7 +252,7 @@ else
 }
 ```
 
-After `LOG(L_WARN, "Arduino loop() starting up\r\n");`,
+After `LOG(L_WARN, "Arduino loop() starting up\r\n");`
 add the following to change the RGB-LED to green signaling that registration and connection is done:
 ```javascript
   strip.WS2812SetRGB(0, 0x00, 0x40, 0x00);
