@@ -283,7 +283,7 @@ Get rid of the if/else statement already written within the loop and replace it 
     sendCommand(message);
   }
 ```
-### Finished Sketch
+## 6. Finished Sketch
 
 With all of the modifications, the finished code should look as follows:
 
