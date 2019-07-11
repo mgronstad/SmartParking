@@ -52,13 +52,13 @@ For more detailed instructions corresponding to steps 1-4 see [Twilio's Develope
 ## 1. Register the narrowband SIM with Twilio
 The following steps will allow you to activate your SIM on the network and create a Narrowband Rate Plan. Log into Twilio and [register your narrowband SIM](https://www.twilio.com/docs/wireless/quickstart/alfa-developer-kit#step-1-register-your-narrowband-sim).
 
-* __Enter registration code__: Registers your starter SIM to your Twilio Account
+  __Enter registration code__: Registers your starter SIM to your Twilio Account
 
-* __Choose a Unique Name for your SIM__: Allows you to identify this particular SIM within the SIMs section of the Twilio Console
+  __Choose a Unique Name for your SIM__: Allows you to identify this particular SIM within the SIMs section of the Twilio Console
 
-* __Create a Rate Plan__: Monitors and regulates the SIM's usage
+   __Create a Rate Plan__: Monitors and regulates the SIM's usage
 
-* __Activate the SIM__: Activate your SIM on the T-Mobile Network
+   __Activate the SIM__: Activate your SIM on the T-Mobile Network
 
 ## 2. Set up the Hardware
 The following steps lay out the hardware instructions for the NB-IoT 'Alfa' Developer Kit.
@@ -98,11 +98,11 @@ To select the board you are using, click *Tools > Board > Wio Tracker LTE*.
    
 Click *Tools > Post > {Your Modem Port Here}* this selects the correct port. The port selected will be different depending upon the laptop:
     
-   * OSX: /dev/{cu|tty}.usbmodem{XXX}
+   * **OSX**: /dev/{cu|tty}.usbmodem{XXX}
     
-   * Linux: /dev/ttyACM{X}
+   * **Linux**: /dev/ttyACM{X}
     
-   * Windows: COM{X}
+   * **Windows**: COM{X}
 
 ## 5. Create the sketch to be uploaded to the Dev kit
 The Breakout Arduino Library offers several example sketches for getting started with the various sensors. For this project, we will be adapting the Ultrasonic sensor code. Start by opening the Ultrasonic example.
@@ -192,17 +192,34 @@ For the code to be valid, you need to include the Ultrasonic library. Follow the
 
 ### Modifications to the Ultrasonic Sketch
 
-Modify the device purpose so that it is specific to this project, i.e. *Smart Parking Ultrasonic Detection*.
+#### Within the preprocessor directives
+Substitute the first line `#include <board.h>` with the corresponding board library by going to *Sketch > Include Library > Wio LTE Arduino Library*, that line should be substituted with:
+```javascript
+#include <board_config.h>
+#include <ethernet.h>
+#include <gnss.h>
+#include <stm32f4_ws2812.h>
+#include <UART_Interface.h>
+#include <wio_tracker.h>
+```
 
-Then change the value of psk_key so that it matches the key specific to your SIM. Log into your *Twilio account > Programmable Wireless > SIMs > your SIM's unique name > Breakout SDK > Pre-Shared Key*.
+Modify the device purpose so that it is specific to this project, i.e. *Smart Parking Ultrasonic Detection*:
+```javascript
+static const char *device_purpose = "Smart Parking Ultrasonic Detection";
+```
 
-Above the #define lines I added
+Then change the value of psk_key so that it matches the key specific to **your SIM**. Log into your *Twilio account > Programmable Wireless > SIMs > your SIM's unique name > Breakout SDK > Pre-Shared Key*:
+```javascript
+static const char *psk_key = "your Pre-Shared Key here";
+```
+
+Above the `#define` lines add:
 ```javascript
 WS2812 strip = WS2812(1, RGB_LED_PIN);
 ```
 This will make your LED start off as yellow, it will transition to green once registration and connection is done.
 
-Then, above the `void setup()`, add the following:
+Then, right above the `void setup()`, add the following:
 
 ```javascript
 void enableLed()
@@ -210,54 +227,39 @@ void enableLed()
     pinMode(RGB_LED_PWR_PIN, OUTPUT);
     digitalWrite(RGB_LED_PWR_PIN, HIGH);
     strip.begin();
-    string.brightness = 5;
+    strip.brightness = 5;
 }
 ```
-
-Remove the line within `void setup()` that states:
-```javascript
-pinMode(38, INPUT);
-```
-
-After the line
-```javascript
-LOG(L_WARN, "Arduino setup() starting up\r\n");
-```
-Add the following which will change the RGB-LED to yellow:
+#### Within the `void setup()`
+After the line `LOG(L_WARN, "Arduino setup() starting up\r\n");`, add the following which will change the RGB-LED to yellow:
 ```javascript
 enableLed();
 strip.WS2812SetRGB(0, 0x20, 0x20, 0x00);
 strip.WS2812Send();
 ```
 
-After the line
-```javascript
-breakout->powerModuleOn();
-```
-Insert the following block of code:
+After the line `breakout->powerModuleOn();`, insert the following block of code:
 ```javascript
 const char command[] = "LED Parking Sensor Activator";
-  if(breakout->sendTextCommand(command) == COMMAND_STATUS_OK)
-  {
-    LOG(L_INFO, "Tx-Command [%s]\r\n", command);
-  }
-  else
-  {
-    LOG(L_INFO, "Tx-Command ERROR\r\n");
-  }
+if(breakout->sendTextCommand(command) == COMMAND_STATUS_OK)
+{
+  LOG(L_INFO, "Tx-Command [%s]\r\n", command);
+}
+else
+{
+  LOG(L_INFO, "Tx-Command ERROR\r\n");
+}
 ```
 
-After
-```javascript
-LOG(L_WARN, "Arduino loop() starting up\r\n");
-```
-Add the following to change the RGB-LED to green signaling that registration and connection is done:
+After `LOG(L_WARN, "Arduino loop() starting up\r\n");`,
+add the following to change the RGB-LED to green signaling that registration and connection is done:
 ```javascript
   strip.WS2812SetRGB(0, 0x00, 0x40, 0x00);
   strip.WS2812Send();
 ```
 
-Within the `void loop()` get rid of the if/else statement in there and replace it with the following:
+#### Within the `void loop()`
+Get rid of the if/else statement already written within the loop and replace it with the following:
 ```javascript
   if(distance < 20)
   {
@@ -278,16 +280,130 @@ Within the `void loop()` get rid of the if/else statement in there and replace i
     sendCommand(message);
   }
 ```
+### Finished Sketch:
+
+With all of the modifications, the finished code should look as follows:
+
+```javascript
+#include <board_config.h>
+#include <ethernet.h>
+#include <gnss.h>
+#include <stm32f4_ws2812.h>
+#include <UART_Interface.h>
+#include <wio_tracker.h>
+#include <BreakoutSDK.h>
+// Install https://github.com/Seeed-Studio/Grove_Ultrasonic_Ranger
+#include <Ultrasonic.h>
+
+/** Change this to your device purpose */
+static const char *device_purpose = "Smart Parking Ultrasonic Detection";
+/** Change this to your key for the SIM card inserted in this device 
+ *  You can find your PSK under the Breakout SDK tab of your Narrowband SIM detail at
+ *  https://www.twilio.com/console/wireless/sims
+*/
+static const char *psk_key = "00112233445566778899aabbccddeeff";
+
+/** This is the Breakout SDK top API */
+Breakout *breakout = &Breakout::getInstance();
+
+WS2812 strip = WS2812(1, RGB_LED_PIN);
+
+#define ULTRASONIC_PIN  (38)
+#define INTERVAL        (1000)
+
+Ultrasonic UltrasonicRanger(ULTRASONIC_PIN);
+
+void enableLed()
+{
+    pinMode(RGB_LED_PWR_PIN, OUTPUT);
+    digitalWrite(RGB_LED_PWR_PIN, HIGH);
+    strip.begin();
+    strip.brightness = 5;
+}
+
+/**
+ * Setting up the Arduino platform. This is executed once, at reset.
+ */
+void setup() {
+
+  pinMode(38, INPUT);
+  
+  // Feel free to change the log verbosity. E.g. from most critical to most verbose:
+  //   - errors: L_ALERT, L_CRIT, L_ERR, L_ISSUE
+  //   - warnings: L_WARN, L_NOTICE
+  //   - information & debug: L_INFO, L_DB, L_DBG, L_MEM
+  // When logging, the additional L_CLI level ensure that the output will always be visible, no matter the set level.
+  owl_log_set_level(L_INFO);
+  LOG(L_WARN, "Arduino setup() starting up\r\n");
+
+  enableLed();
+  strip.WS2812SetRGB(0, 0x20, 0x20, 0x00);
+  strip.WS2812Send();
+
+  // Set the Breakout SDK parameters
+  breakout->setPurpose(device_purpose);
+  breakout->setPSKKey(psk_key);
+  breakout->setPollingInterval(10 * 60);  // Optional, by default set to 10 minutes
+  
+  // Powering the modem and starting up the SDK
+  LOG(L_WARN, "Powering on module and registering...");
+  breakout->powerModuleOn();
+
+  const char command[] = "LED Parking Sensor Activator";
+  if(breakout->sendTextCommand(command) == COMMAND_STATUS_OK)
+  {
+    LOG(L_INFO, "Tx-Command [%s]\r\n", command);
+  }
+  else
+  {
+    LOG(L_INFO, "Tx-Command ERROR\r\n");
+  }
+  
+  LOG(L_WARN, "... done powering on and registering.\r\n");
+  LOG(L_WARN, "Arduino loop() starting up\r\n");
+
+  strip.WS2812SetRGB(0, 0x00, 0x40, 0x00);
+  strip.WS2812Send();
+}
 
 
-What do I want to do in this read me?
-    
-    Introduction to the product/project
-    
-    Explain a little bit about the dev kit
-    
-    Why is NB-IoT so cool??
-    
-    Explain the logistics of the project
-    
-        On a basic scale what is happening?
+/**
+ * This is just a simple example to send a command and write out the status to the console.
+ */
+ 
+void sendCommand(const char * command) {
+  if (breakout->sendTextCommand(command) == COMMAND_STATUS_OK) {
+    LOG(L_INFO, "Tx-Command [%s]\r\n", command);
+  } else {
+    LOG(L_INFO, "Tx-Command ERROR\r\n");
+  }
+}
+
+void loop()
+{
+  long distance;
+  distance = UltrasonicRanger.MeasureInCentimeters();
+  if(distance < 20)
+  {
+    // Change to red because spot is occupied
+    strip.WS2812SetRGB(0, 0x40, 0x00, 0x00);
+    strip.WS2812Send();
+    LOG(L_INFO, "Object is [%ld] CM from the sensor.\r\n", distance);
+    char message[] = "occupied";
+    sendCommand(message); 
+  }
+  else
+  {
+    // Set RGB-LED to green because spot is open
+    strip.WS2812SetRGB(0, 0x00, 0x40, 0x00);
+    strip.WS2812Send();
+    LOG(L_INFO, "Object is [%ld] CM from the sensor.\r\n", distance);
+    char message[] = "unoccupied";
+    sendCommand(message);
+  }
+  
+  breakout->spin();
+  
+  delay(INTERVAL);
+}
+```
