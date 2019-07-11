@@ -188,7 +188,9 @@ void loop()
   delay(INTERVAL);
 }
 ```
-For the code to be valid, you need to include the Ultrasonic library. Follow the commented link [// Install https://github.com/Seeed-Studio/Grove_Ultrasonic_Ranger](https://github.com/Seeed-Studio/Grove_Ultrasonic_Ranger) at the top of the code and download it as a zip file and then add it to your Arduino IDE.
+For the code to be valid, you need to include the Ultrasonic library. Follow the commented link
+
+[// Install https://github.com/Seeed-Studio/Grove_Ultrasonic_Ranger](https://github.com/Seeed-Studio/Grove_Ultrasonic_Ranger) at the top of the code, download it as a zip file, and then add it to your Arduino IDE.
 
 ### Modifications to the Ultrasonic Sketch
 
@@ -259,7 +261,7 @@ add the following to change the RGB-LED to green signaling that registration and
   strip.WS2812Send();
 ```
 
-#### Within the `void loop()`
+#### Within the void loop()
 Get rid of the if/else statement already written within the loop and replace it with the following:
 ```javascript
   if(distance < 20)
@@ -281,7 +283,7 @@ Get rid of the if/else statement already written within the loop and replace it 
     sendCommand(message);
   }
 ```
-### Finished Sketch:
+### Finished Sketch
 
 With all of the modifications, the finished code should look as follows:
 
