@@ -67,13 +67,15 @@ It may take a minute or two for the SIM to connect to the network for the first 
 
 ## 4. Set up the software environment
 
-__Download and install the Breakout SDK__: The Breakout SDK can be found on [Github](https://github.com/twilio/Breakout_Arduino_Library#setting-up-your-development-environment). Download the Breakout_Arduino_Library.zip from GitHub. Open the Arduino IDE and add the .zip to the Arduino IDE Library.
+### Download and install the Breakout SDK
+The Breakout SDK can be found on [Github](https://github.com/twilio/Breakout_Arduino_Library#setting-up-your-development-environment). Download the Breakout_Arduino_Library.zip from GitHub. Open the Arduino IDE and add the .zip to the Arduino IDE Library.
 
-   Go to Sketch > Include Library > Add .ZIP Library and select the Breakout_Arduino_Library.zip
+   Go to *Sketch > Include Library > Add .ZIP Library* and select the Breakout_Arduino_Library.zip
 
-__Download and install the corresponding board cores__: To develop on the board, you need to download the corresponding cores in the Arduino IDE.
+### Download and install the corresponding board cores
+To develop on the board, you need to download the corresponding cores in the Arduino IDE.
 
-   Go to Arduino > Preferences and copy the following URL into the Additional Boards Manager URLs field: <https://raw.githubusercontent.com/Seeed-Studio/Seeed_Platform/master/package_seeeduino_boards_index.json>
+   Go to **Arduino > Preferences** and copy the following URL into the Additional Boards Manager URLs field: <https://raw.githubusercontent.com/Seeed-Studio/Seeed_Platform/master/package_seeeduino_boards_index.json>
    
    
    Open Tools > Board > Boards Manager and search for "Seeed" and select the "Seeed STM32F4 Boards" version 1.2.3+ and click install. Restart the Arduino IDE.
