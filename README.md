@@ -32,6 +32,7 @@ Requirements
   * LTE Antenna
   * Micro-USB Cable
   * Ultrasonic Range Sensor
+  * Additional Cabling
 
 ### Software
 * Arduino IDE
@@ -44,6 +45,20 @@ Requirements
 * Twilio
 * AWS (Amazon Web Services) free 1-year subscription
 * More accounts? Double check
+
+For more detailed instructions, [Twilio's Developer Kit Setup Quickstart](https://www.twilio.com/wireless/narrowband/devkit)
+
+1. Register the narrowband SIM with Twilio
+------------------------------------------
+The following steps will allow you to activate your SIM on the network and create a Narrowband Rate Plan. Remove the Twilio Narrowband SIM from the Developer Kit. Log into Twilio and [register your narrowband SIM](https://www.twilio.com/docs/wireless/quickstart/alfa-developer-kit#step-1-register-your-narrowband-sim).
+* __Enter registration code__: Registers your starter SIM to your Twilio Account
+* __Choose a Unique Name for your SIM__: Allows you to identify this particular SIM within the SIMs section of the Twilio Console
+* __Create a Rate Plan__: Monitors and regulates the SIM's usage
+* __Activate the SIM__: Activate your SIM on the T-Mobile Network
+
+2. Set up the Hardware
+----------------------
+Pop out the nano form factor (the smallest form) of the Narrowband SIM and insert the SIM into the Developer board. Connect the LTE antenna. Plug in the micro USB cable into the board and insert the other end of the cable into a USB port on a computer. Plug in the lithium battery. Using the additional cabling, plug in the Grove Ultrasonic Ranger into port D38. 
 
 What do I want to do in this read me?
     Introduction to the product/project
