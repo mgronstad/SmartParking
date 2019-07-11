@@ -94,7 +94,7 @@ Go to *Arduino > Preferences* and copy the following URL into the Additional Boa
    
 Open *Tools > Board > Boards Manager* and search for "Seeed" and select the "Seeed STM32F4 Boards" version 1.2.3+ and click install. Restart the Arduino IDE.
    
-Click *Tools > Board > Wio Tracker LTE* this selects the board that you are using.
+To select the board you are using, click *Tools > Board > Wio Tracker LTE*.
    
 Click *Tools > Post > {Your Modem Port Here}* this selects the correct port. The port selected will be different depending upon the laptop:
     
@@ -103,6 +103,181 @@ Click *Tools > Post > {Your Modem Port Here}* this selects the correct port. The
    * Linux: /dev/ttyACM{X}
     
    * Windows: COM{X}
+
+## 5. Create the sketch to be uploaded to the Dev kit
+The Breakout Arduino Library offers several example sketches for getting started with the various sensors. For this project, we will be adapting the Ultrasonic sensor code. Start by opening the Ultrasonic example.
+
+Click *File > Examples > Breakout Arduino Library > Sensors > Ultrasonic* to open the Ultraasonic sketch:
+
+```javascript
+#include <board.h>
+#include <BreakoutSDK.h>
+// Install https://github.com/Seeed-Studio/Grove_Ultrasonic_Ranger
+#include <Ultrasonic.h>
+
+/** Change this to your device purpose */
+static const char *device_purpose = "Dev-Kit";
+/** Change this to your key for the SIM card inserted in this device 
+ *  You can find your PSK under the Breakout SDK tab of your Narrowband SIM detail at
+ *  https://www.twilio.com/console/wireless/sims
+*/
+static const char *psk_key = "00112233445566778899aabbccddeeff";
+
+/** This is the Breakout SDK top API */
+Breakout *breakout = &Breakout::getInstance();
+
+#define ULTRASONIC_PIN  (38)
+#define INTERVAL        (1000)
+
+Ultrasonic UltrasonicRanger(ULTRASONIC_PIN);
+
+/**
+ * Setting up the Arduino platform. This is executed once, at reset.
+ */
+void setup() {
+
+  pinMode(38, INPUT);
+  
+  // Feel free to change the log verbosity. E.g. from most critical to most verbose:
+  //   - errors: L_ALERT, L_CRIT, L_ERR, L_ISSUE
+  //   - warnings: L_WARN, L_NOTICE
+  //   - information & debug: L_INFO, L_DB, L_DBG, L_MEM
+  // When logging, the additional L_CLI level ensure that the output will always be visible, no matter the set level.
+  owl_log_set_level(L_INFO);
+  LOG(L_WARN, "Arduino setup() starting up\r\n");
+
+  // Set the Breakout SDK parameters
+  breakout->setPurpose(device_purpose);
+  breakout->setPSKKey(psk_key);
+  breakout->setPollingInterval(10 * 60);  // Optional, by default set to 10 minutes
+  
+  // Powering the modem and starting up the SDK
+  LOG(L_WARN, "Powering on module and registering...");
+  breakout->powerModuleOn();
+  
+  LOG(L_WARN, "... done powering on and registering.\r\n");
+  LOG(L_WARN, "Arduino loop() starting up\r\n");
+}
+
+
+/**
+ * This is just a simple example to send a command and write out the status to the console.
+ */
+ 
+void sendCommand(const char * command) {
+  if (breakout->sendTextCommand(command) == COMMAND_STATUS_OK) {
+    LOG(L_INFO, "Tx-Command [%s]\r\n", command);
+  } else {
+    LOG(L_INFO, "Tx-Command ERROR\r\n");
+  }
+}
+
+void loop()
+{
+  long distance;
+  distance = UltrasonicRanger.MeasureInCentimeters();
+  if (distance < 10){
+    char message[] = "Object is within 10cm of sensor";
+    sendCommand(message);
+  } else {
+    LOG(L_INFO, "Object is [%ld] CM from the sensor\r\n", distance );
+  }
+  
+  breakout->spin();
+  
+  delay(INTERVAL);
+}
+```
+For the code to be valid, you need to include the Ultrasonic library. Follow the [link](https://github.com/Seeed-Studio/Grove_Ultrasonic_Ranger) at the top of the code and download it as a zip file and then add it to your Arduino IDE.
+
+### Modifications to the Ultrasonic Sketch
+
+Modify the device purpose so that it is specific to this project, i.e. *Smart Parking Ultrasonic Detection*.
+
+Then change the value of psk_key so that it matches the key specific to your SIM. Log into your *Twilio account > Programmable Wireless > SIMs > your SIM's unique name > Breakout SDK > Pre-Shared Key*.
+
+Above the #define lines I added
+```javascript
+WS2812 strip = WS2812(1, RGB_LED_PIN);
+```
+This will make your LED start off as yellow, it will transition to green once registration and connection is done.
+
+Then, above the `void setup()`, add the following:
+
+```javascript
+void enableLed()
+{
+    pinMode(RGB_LED_PWR_PIN, OUTPUT);
+    digitalWrite(RGB_LED_PWR_PIN, HIGH);
+    strip.begin();
+    string.brightness = 5;
+}
+```
+
+Remove the line within `void setup()` that states:
+```javascript
+pinMode(38, INPUT);
+```
+
+After the line
+```javascript
+LOG(L_WARN, "Arduino setup() starting up\r\n");
+```
+Add the following which will change the RGB-LED to yellow:
+```javascript
+enableLed();
+strip.WS2812SetRGB(0, 0x20, 0x20, 0x00);
+strip.WS2812Send();
+```
+
+After the line
+```javascript
+breakout->powerModuleOn();
+```
+Insert the following block of code:
+```javascript
+const char command[] = "LED Parking Sensor Activator";
+  if(breakout->sendTextCommand(command) == COMMAND_STATUS_OK)
+  {
+    LOG(L_INFO, "Tx-Command [%s]\r\n", command);
+  }
+  else
+  {
+    LOG(L_INFO, "Tx-Command ERROR\r\n");
+  }
+```
+
+After
+```javascript
+LOG(L_WARN, "Arduino loop() starting up\r\n");
+```
+Add the following to change the RGB-LED to green signaling that registration and connection is done:
+```javascript
+  strip.WS2812SetRGB(0, 0x00, 0x40, 0x00);
+  strip.WS2812Send();
+```
+
+Within the `void loop()` get rid of the if/else statement in there and replace it with the following:
+```javascript
+  if(distance < 20)
+  {
+    // Change to red because spot is occupied
+    strip.WS2812SetRGB(0, 0x40, 0x00, 0x00);
+    strip.WS2812Send();
+    LOG(L_INFO, "Object is [%ld] CM from the sensor.\r\n", distance);
+    char message[] = "occupied";
+    sendCommand(message); 
+  }
+  else
+  {
+    // Set RGB-LED to green because spot is open
+    strip.WS2812SetRGB(0, 0x00, 0x40, 0x00);
+    strip.WS2812Send();
+    LOG(L_INFO, "Object is [%ld] CM from the sensor.\r\n", distance);
+    char message[] = "unoccupied";
+    sendCommand(message);
+  }
+```
 
 
 What do I want to do in this read me?
