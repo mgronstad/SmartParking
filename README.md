@@ -33,6 +33,7 @@ Requirements
   * Micro-USB Cable
   * Ultrasonic Range Sensor
   * Additional Cabling
+  Extra documentation on the board can be found [here](https://github.com/SeeedDocument/wiki_english/blob/master/docs/Wio_LTE_Cat_M1_NB-IoT_Tracker.md).
 
 ### Software
 * Arduino IDE
@@ -46,10 +47,10 @@ Requirements
 * AWS (Amazon Web Services) free 1-year subscription
 * More accounts? Double check
 
-For more detailed instructions, [Twilio's Developer Kit Setup Quickstart](https://www.twilio.com/wireless/narrowband/devkit)
+For more detailed instructions corresponding to steps 1-4 see [Twilio's Developer Kit Setup Quickstart](https://www.twilio.com/wireless/narrowband/devkit)
 
 ## 1. Register the narrowband SIM with Twilio
-The following steps will allow you to activate your SIM on the network and create a Narrowband Rate Plan. Remove the Twilio Narrowband SIM from the Developer Kit. Log into Twilio and [register your narrowband SIM](https://www.twilio.com/docs/wireless/quickstart/alfa-developer-kit#step-1-register-your-narrowband-sim).
+The following steps will allow you to activate your SIM on the network and create a Narrowband Rate Plan. Log into Twilio and [register your narrowband SIM](https://www.twilio.com/docs/wireless/quickstart/alfa-developer-kit#step-1-register-your-narrowband-sim).
 
 * __Enter registration code__: Registers your starter SIM to your Twilio Account
 
@@ -60,10 +61,23 @@ The following steps will allow you to activate your SIM on the network and creat
 * __Activate the SIM__: Activate your SIM on the T-Mobile Network
 
 ## 2. Set up the Hardware
-Pop out the nano form factor (the smallest form) of the Narrowband SIM and insert the SIM into the Developer board. Connect the LTE antenna. Plug in the micro USB cable into the board and insert the other end of the cable into a USB port on a computer. Plug in the lithium battery. Using the additional cabling, plug in the Grove Ultrasonic Ranger into port D38. 
+The following steps lay out the hardware instructions for the NB-IoT 'Alfa' Developer Kit.
+* __Insert the SIM into the development board__: Pop out the nano form factor (the *smallest* form) of the Narrowband SIM and insert the SIM into the bottom of the two slots available.
+
+* __Connect the LTE antenna__: The black rectangular LTE antenna gets connected to the pin labeled LTE on the back of the board.
+
+* __Plug in the USB cable__: Insert the micro USB cable into the board and plug the other end of the cable into a USB port on a computer.
+
+* __Plug in the lithium battery__: Insert the JST connector of the lithium battery into the battery port to the right of the micro USB port. It is recommended that the lithium battery be plugged in at all times, especially if USB power source does not provide sufficient power for the board at peak levels.
+
+* __Attach the Ultrasonic Sensor__: Using the additional cabling, plug in the Grove Ultrasonic Ranger into port D38. 
 
 ## 3. Verify your board connects to the T-Mobile network
-It may take a minute or two for the SIM to connect to the network for the first time. The network LED (indicated by NET) will initially be orange. Once the SIM is connected, the light will turn blue.
+It may take a few minutes for the SIM to connect to the network for the first time. The network LED (indicated by NET) will initially be orange. Once the SIM is connected, the light will turn blue.
+
+If the LED doesn't turn blue, try another location.
+
+If the device doesn't attach to the network in approximatey three minutes, reboot the device and try again.
 
 ## 4. Set up the software environment
 
@@ -75,16 +89,14 @@ The Breakout SDK can be found on [Github](https://github.com/twilio/Breakout_Ard
 ### Download and install the corresponding board cores
 To develop on the board, you need to download the corresponding cores in the Arduino IDE.
 
-   Go to **Arduino > Preferences** and copy the following URL into the Additional Boards Manager URLs field: <https://raw.githubusercontent.com/Seeed-Studio/Seeed_Platform/master/package_seeeduino_boards_index.json>
+Go to *Arduino > Preferences* and copy the following URL into the Additional Boards Manager URLs field: <https://raw.githubusercontent.com/Seeed-Studio/Seeed_Platform/master/package_seeeduino_boards_index.json>
    
    
-   Open Tools > Board > Boards Manager and search for "Seeed" and select the "Seeed STM32F4 Boards" version 1.2.3+ and click install. Restart the Arduino IDE.
+Open *Tools > Board > Boards Manager* and search for "Seeed" and select the "Seeed STM32F4 Boards" version 1.2.3+ and click install. Restart the Arduino IDE.
    
+Click *Tools > Board > Wio Tracker LTE* this selects the board that you are using.
    
-  Click Tools > Board > Wio Tracker LTE
-   
-   
-  Click Tools > Post > {Your Modem Port Here}
+Click *Tools > Post > {Your Modem Port Here}* this selects the correct port. The port selected will be different depending upon the laptop:
     
    * OSX: /dev/{cu|tty}.usbmodem{XXX}
     
@@ -94,8 +106,13 @@ To develop on the board, you need to download the corresponding cores in the Ard
 
 
 What do I want to do in this read me?
+    
     Introduction to the product/project
+    
     Explain a little bit about the dev kit
+    
     Why is NB-IoT so cool??
+    
     Explain the logistics of the project
+    
         On a basic scale what is happening?
