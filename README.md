@@ -52,13 +52,13 @@ For more detailed instructions corresponding to steps 1-4 see [Twilio's Develope
 ## 1. Register the narrowband SIM with Twilio
 The following steps will allow you to activate your SIM on the network and create a Narrowband Rate Plan. Log into Twilio and [register your narrowband SIM](https://www.twilio.com/docs/wireless/quickstart/alfa-developer-kit#step-1-register-your-narrowband-sim).
 
-  __Enter registration code__: Registers your starter SIM to your Twilio Account
+  * __Enter registration code__: Registers your starter SIM to your Twilio Account
 
-  __Choose a Unique Name for your SIM__: Allows you to identify this particular SIM within the SIMs section of the Twilio Console
+  * __Choose a Unique Name for your SIM__: Allows you to identify this particular SIM within the SIMs section of the Twilio Console
 
-   __Create a Rate Plan__: Monitors and regulates the SIM's usage
+   * __Create a Rate Plan__: Monitors and regulates the SIM's usage
 
-   __Activate the SIM__: Activate your SIM on the T-Mobile Network
+   * __Activate the SIM__: Activate your SIM on the T-Mobile Network
 
 ## 2. Set up the Hardware
 The following steps lay out the hardware instructions for the NB-IoT 'Alfa' Developer Kit.
@@ -82,12 +82,12 @@ If the device doesn't attach to the network in approximatey three minutes, reboo
 ## 4. Set up the software environment
 
 ### Download and install the Breakout SDK
-The Breakout SDK can be found on [Github](https://github.com/twilio/Breakout_Arduino_Library#setting-up-your-development-environment). Download the Breakout_Arduino_Library.zip from GitHub. Open the Arduino IDE and add the .zip to the Arduino IDE Library.
+The Breakout SDK can be found on Github. Download the [Breakout_Arduino_Library.zip](https://github.com/twilio/Breakout_Arduino_Library#setting-up-your-development-environment). Open the Arduino IDE and add the .zip to the Arduino IDE Library.
 
-   Go to *Sketch > Include Library > Add .ZIP Library* and select the Breakout_Arduino_Library.zip
+   Go to *Sketch > Include Library > Add .ZIP Library* and select the corresponding zip
 
 ### Download and install the corresponding board cores
-To develop on the board, you need to download the corresponding cores in the Arduino IDE.
+To develop on the board, you need to download the following cores in the Arduino IDE.
 
 Go to *Arduino > Preferences* and copy the following URL into the Additional Boards Manager URLs field: <https://raw.githubusercontent.com/Seeed-Studio/Seeed_Platform/master/package_seeeduino_boards_index.json>
    
@@ -190,7 +190,7 @@ void loop()
 ```
 For the code to be valid, you need to include the Ultrasonic library. Follow the commented link
 
-[// Install https://github.com/Seeed-Studio/Grove_Ultrasonic_Ranger](https://github.com/Seeed-Studio/Grove_Ultrasonic_Ranger) at the top of the code, download it as a zip file, and then add it to your Arduino IDE.
+`// Install [https://github.com/Seeed-Studio/Grove_Ultrasonic_Ranger](https://github.com/Seeed-Studio/Grove_Ultrasonic_Ranger)` at the top of the code, download it as a zip file, and then add it to your Arduino IDE.
 
 ### Modifications to the Ultrasonic Sketch
 
@@ -234,7 +234,9 @@ void enableLed()
     strip.brightness = 5;
 }
 ```
-#### Within the void setup()
+#### Within the setup function
+The following modifications are made within the `void setup()`
+
 After the line `LOG(L_WARN, "Arduino setup() starting up\r\n");` add the following which will change the RGB-LED to yellow:
 ```javascript
 enableLed();
@@ -261,7 +263,7 @@ add the following to change the RGB-LED to green signaling that registration and
   strip.WS2812Send();
 ```
 
-#### Within the void loop()
+#### Within the loop function
 Get rid of the if/else statement already written within the loop and replace it with the following:
 ```javascript
   if(distance < 20)
