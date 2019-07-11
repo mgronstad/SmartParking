@@ -264,6 +264,7 @@ add the following to change the RGB-LED to green signaling that registration and
 ```
 
 #### Within the loop function
+The following modifications are made within the `void loop()`
 Get rid of the if/else statement already written within the loop and replace it with the following:
 ```javascript
   if(distance < 20)
