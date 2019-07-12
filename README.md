@@ -105,7 +105,7 @@ Click *Tools > Post > {Your Modem Port Here}* this selects the correct port. The
    * **Windows**: COM{X}
 
 ## 5. Create the sketch to be uploaded to the Dev kit
-The Breakout Arduino Library offers several example sketches for getting started with the various sensors. For this project, we will be adapting the Ultrasonic sensor code. Start by opening the Ultrasonic example.
+The Breakout Arduino Library offers several example sketches for getting started with the various sensors. For this project, we will be adapting the Ultrasonic sensor code (the full finalized sketch is in step 6). Start by opening the Ultrasonic example.
 
 Click *File > Examples > Breakout Arduino Library > Sensors > Ultrasonic* to open the Ultrasonic sketch:
 
@@ -413,3 +413,23 @@ void loop()
   delay(INTERVAL);
 }
 ```
+## 7. Uploading the Code
+To upload code to the development board, the board needs to be put into Bootloader mode. Uploading code is useful for both running the program itself and debugging purposes.
+
+### Entering Bootloader Mode
+1. *Press and hold* the **BOOT0** button underneath the Developer Board.
+2. *Press and release* the **RST** button on top of the Developer Board.
+3. *Release* the **BOOT0** button to enable Bootloader mode.
+4. Open up the Arduino IDE and press *upload* (a forward facing arrow in the upper left corner).
+5. After the code has been uploaded to the board, *press* the **RST** button which will take the board out of Bootloader mode.
+
+### Connecting to the Network and Sending a Command
+After resetting the board, the NB-IoT network registration process will begin. This registers the board on the network and allocates bandwidth for the device. The Network Connectivity LED (NET) will glow orange during this time. Opening the Serial Monitor will allow you to watch the board registering and connecting to the network. Once the board has successfully registered to the NB-IoT network the Network Connectivity LED will glow blue.
+
+When the board has successfully connected to the NB-IoT network, the Breakout SDK will be initialized. The Breakout SDK will begin sending Commands to Twilio. Every Command sent and received by the Breakout SDK is logged. Commands sent over the NB-IoT network can be found in the Twilio Console.
+
+### Accessing the Commands Sent
+1. Navigate to *Programmable Wireless* in the Twilio Console
+2. Click *SIMs*
+3. Find the *Narrowband SIM* that was previously registered
+4. Click the *Commands* tab
