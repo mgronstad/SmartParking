@@ -190,7 +190,7 @@ void loop()
 ```
 For the code to be valid, you need to include the Ultrasonic library. Follow the commented link
 
-`// Install https://github.com/Seeed-Studio/Grove_Ultrasonic_Ranger` at the top of the code, download it as a zip file, and then add it to your Arduino IDE.
+`// Install [https://github.com/Seeed-Studio/Grove_Ultrasonic_Ranger](https://github.com/Seeed-Studio/Grove_Ultrasonic_Ranger) ` at the top of the code, download it as a zip file, and then add it to your Arduino IDE.
 
 ### Modifications to the Ultrasonic Sketch
 
