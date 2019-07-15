@@ -19,6 +19,9 @@ async function dynamo_insert(data, context, callback) {
 
   const params = {
     TableName: "Parking_Events",
+    Key: {
+      SIM_ID: data.ID
+    },
     Item: {
       //Event_ID: uuid.v1(),
       SIM_ID: data.ID,
