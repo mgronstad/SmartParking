@@ -14,14 +14,23 @@ app.use(
 app.post("/fromSIM", function(req, res) {
   let command = req.body.Command;
   let simID = req.body.SimSid;
-  let occupied = command == "occupied"
+  let occupied = command == "occupied";
   let data = {
-    "ID":simID,
-    "occupied": occupied
-  }
+    ID: simID,
+    occupied: occupied
+  };
   console.log(data);
   db_functions.dynamo_insert(data);
 });
+
+app.get("/status", function(req, res) {
+  db_functions.retrieve_status().then(function(result) {
+    res.json({
+      status: result
+    });
+  });
+});
+
 /*
 app.get("/getEvents/:SIM", function(req, res) {
   SIM = req.params.SIM;

@@ -47,3 +47,4 @@ async function retrieve_status(params, context, callback) {
 }
 
 module.exports.dynamo_insert = dynamo_insert;
+module.exports.retrieve_status = retrieve_status;
