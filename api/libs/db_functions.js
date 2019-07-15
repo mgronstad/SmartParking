@@ -36,7 +36,7 @@ async function dynamo_insert(data, context, callback) {
   }
 }
 
-async function retrieve_status(params, context, callback) {
+async function retrieve_status(params = {}, context, callback) {
   try {
     status = await dynamoDbLib.call("get", params);
     return responseLib.success(status);
