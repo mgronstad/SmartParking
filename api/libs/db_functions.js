@@ -22,12 +22,12 @@ async function dynamo_insert(data, context, callback) {
     Key: {
       SIM_ID: data.ID
     },
-    Item: {
-      //Event_ID: uuid.v1(),
-      SIM_ID: data.ID,
-      Occupied: data.occupied,
-      PollTime: currentDate
-    }
+    UpdateExpression: "set Occupied = :o, PollTime = :t",
+    ExpressionAttributeValues: {
+      ":o": data.occupied,
+      ":t": currentDate
+    },
+    ReturnValues: "UPDATED_NEW"
   };
 
   try {
