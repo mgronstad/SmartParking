@@ -20,15 +20,17 @@ async function dynamo_insert(data, context, callback) {
   const params = {
     TableName: "Parking_Events",
     Item: {
-      Event_ID: uuid.v1(),
+      //Event_ID: uuid.v1(),
       SIM_ID: data.ID,
       Occupied: data.occupied,
-      Time: currentDate
+      PollTime: currentDate
     }
   };
 
+  async function retrieve_status() {}
+
   try {
-    await dynamoDbLib.call("put", params);
+    await dynamoDbLib.call("update", params);
     return responseLib.success(params.Item);
   } catch (e) {
     console.log(e);
