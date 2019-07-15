@@ -27,7 +27,7 @@ async function dynamo_insert(data, context, callback) {
     }
   };
 
-  async function retrieve_status() {}
+  
 
   try {
     await dynamoDbLib.call("update", params);
@@ -35,6 +35,12 @@ async function dynamo_insert(data, context, callback) {
   } catch (e) {
     console.log(e);
     return responseLib.failure({ status: false });
+  }
+}
+
+async function retrieve_status() {
+  try {
+    await dynamoDbLib.call()
   }
 }
 
