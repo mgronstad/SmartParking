@@ -31,8 +31,8 @@ async function dynamo_insert(data, context, callback) {
   };
 
   try {
-    await dynamoDbLib.call("update", params);
-    return responseLib.success(params.Item);
+    ret = await dynamoDbLib.call("update", params);
+    return responseLib.success(ret);
   } catch (e) {
     console.log(e);
     return responseLib.failure({ status: false });
