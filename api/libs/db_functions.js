@@ -41,8 +41,11 @@ async function dynamo_insert(data, context, callback) {
 }
 
 async function retrieve_status(context, callback) {
+  params = {
+    TableName: "Parking_Events"
+  };
   try {
-    status = await dynamoDbLib.call("get", params);
+    status = await dynamoDbLib.call("scan", params);
     return responseLib.success(status);
   } catch (e) {
     console.log(e);
